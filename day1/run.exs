@@ -7,17 +7,17 @@ alias Part1Solver
 alias Part2Solver
 
 # Part 1 solver
-# Parser.parse("./input/test.txt")
-# |> Parser.build_lists()
-# |> Parser.sort_lists()
-# |> Part1Solver.solve()
-# |> IO.inspect(label: "Part 1 test")
-#
-# Parser.parse("./input/prod.txt")
-# |> Parser.build_lists()
-# |> Parser.sort_lists()
-# |> Part1Solver.solve()
-# |> IO.inspect(label: "Part 1 prod")
+Parser.parse("./input/test.txt")
+|> Parser.build_lists()
+|> Parser.sort_lists()
+|> Part1Solver.solve()
+|> IO.inspect(label: "Part 1 test")
+
+Parser.parse("./input/prod.txt")
+|> Parser.build_lists()
+|> Parser.sort_lists()
+|> Part1Solver.solve()
+|> IO.inspect(label: "Part 1 prod")
 
 # Part 2 solver
 Parser.parse("./input/test.txt")

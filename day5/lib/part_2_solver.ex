@@ -1,4 +1,4 @@
-defmodule Part1Solver do
+defmodule Part2Solver do
   @doc """
   Input comes in as a map: 
   %{
@@ -14,13 +14,28 @@ defmodule Part1Solver do
 
     manuals
     |> Enum.filter(fn manual ->
-      manual_valid?(manual, rules)
+      !manual_valid?(manual, rules)
+    end)
+    # tricky bit
+    |> Enum.map(fn manual ->
+      sort_manual(manual, rules)
     end)
     |> Enum.map(fn manual ->
       find_center_el(manual)
       |> String.to_integer()
     end)
     |> Enum.sum()
+  end
+
+  defp sort_manual(manual, rules) do
+    manual
+    |> Enum.sort_by(& &1, fn left, right ->
+      if Map.has_key?(rules, {left, right}) do
+        true
+      else
+        false
+      end
+    end)
   end
 
   defp manual_valid?([_last_element], _rules) do
@@ -42,6 +57,7 @@ defmodule Part1Solver do
 
     [center | _tail] =
       Enum.drop(manual, trunc(length / 2))
+
     center
   end
 end

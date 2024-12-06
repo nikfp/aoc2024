@@ -21,30 +21,23 @@ defmodule Part2Solver do
       starting_loc: starting_loc
     } = input
 
-    # iterate all rows into either `false` or a task
-    Enum.flat_map(0..max_index, fn row ->
-      # iterate all columns
-      Enum.map(0..max_index, fn col ->
-        # no point in putting an obstacle on an obstacle
-        if Map.has_key?(obstacles, {row, col}) do
-          # Task.async(fn -> false end)
-          false
-        else
-          Task.async(fn ->
-            # Test each permutation of dropping an obstacle
-            advance(
-              :up,
-              starting_loc,
-              obstacles |> Map.put({row, col}, true),
-              max_index,
-              %{}
-            )
-          end)
-        end
+    # If the guard is going to hit a new obstacle,
+    # it will be on the path they walked in part 1
+    # so use part 1's list of visited locations
+    # to reduce the problem set
+    Part1Solver.advance(:up, starting_loc, obstacles, max_index, %{})
+    |> Enum.map(fn {{row, col}, _} ->
+      Task.async(fn ->
+        # Test each permutation of dropping an obstacle
+        advance(
+          :up,
+          starting_loc,
+          obstacles |> Map.put({row, col}, true),
+          max_index,
+          %{}
+        )
       end)
     end)
-    # filter out false
-    |> Enum.filter(fn el -> el end)
     # await the tasks
     |> Enum.map(fn task -> Task.await(task) end)
     # filter for locations where task returned true

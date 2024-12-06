@@ -35,6 +35,7 @@ defmodule Part1Solver do
   ## Takes in the following args: 
   - direction - current direction of travel
   - current_loc - current location
+  - obstacles - map of obstacle locations as %{{row, col} => true}
   - max_index - maximum bound of grid
   - visited - map of locations already visited
 

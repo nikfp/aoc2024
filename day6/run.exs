@@ -23,3 +23,25 @@ Parser.parse("./inputs/test.txt")
 Parser.parse("./inputs/prod.txt")
 |> Part2Solver.solve()
 |> IO.inspect(label: "part 2 prod")
+
+Mix.install([
+  {:benchee, "~> 1.0", only: :dev}
+])
+
+Benchee.run(
+  %{
+    part1: fn ->
+      Parser.parse("./inputs/prod.txt")
+      |> Part1Solver.solve()
+      |> IO.inspect(label: "part 1 prod")
+    end,
+    part2: fn ->
+      Parser.parse("./inputs/prod.txt")
+      |> Part2Solver.solve()
+      |> IO.inspect(label: "part 2 prod")
+    end
+  },
+  time: 10,
+  memory_time: 5,
+  reduction_time: 5
+)

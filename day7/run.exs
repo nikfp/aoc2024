@@ -24,3 +24,6 @@ Parser.parse("./inputs/test.txt")
 |> Part2Solver.solve()
 |> IO.inspect(label: "test part 2", charlists: :as_integers)
 
+Parser.parse("./inputs/prod.txt")
+|> Part2Solver.solve()
+|> IO.inspect(label: "prod part 2", charlists: :as_integers)

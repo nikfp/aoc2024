@@ -21,6 +21,7 @@ defmodule Part2Solver do
       end)
 
     [simple | complex_calculated]
+    |> List.flatten()
     |> Enum.map(fn %{target: target} -> target end)
     |> Enum.sum()
   end

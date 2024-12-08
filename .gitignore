@@ -6,3 +6,9 @@ day3/inputs
 day4/inputs
 day5/inputs/prod.txt
 day6/inputs/prod.txt
+day6/_build/dev/lib/day6/.mix
+day6/_build/dev/lib/day6/consolidated
+day6/_build/dev/lib/day6/ebin/Elixir.Parser.beam
+day6/_build/dev/lib/day6/ebin/Elixir.Part1Solver.beam
+day6/_build/dev/lib/day6/ebin/Elixir.Part2Solver.beam
+day6/_build/dev/lib/day6/ebin/day6.app

@@ -1,9 +1,13 @@
 defmodule Part2Solver do
   def solve(input) do
-    %{simple: simple, complex: complex} =
-      input
-      |> Enum.map(fn line -> can_be_true?(line) end)
-      |> Enum.group_by(fn %{solve_pattern: pattern} -> pattern end)
+    input
+    |> Enum.drop(4)
+    |> Enum.take(1)
+    |> Enum.map(fn el -> can_be_true?(el) end)
+
+    # |> Enum.filter(fn line -> can_be_true?(line) end)
+    # |> Enum.map(& &1.target)
+    # |> Enum.sum()
 
     # %{digits: digits, target: target} =
     #   complex
@@ -14,16 +18,16 @@ defmodule Part2Solver do
     #
     # combinify_list(digits, 0, length(digits), target)
 
-    complex_calculated =
-      complex
-      |> Enum.filter(fn %{digits: digits, target: target} -> 
-        combinify_list(digits, 0, length(digits), target)
-      end)
+    # complex_calculated =
+    #   complex
+    #   |> Enum.filter(fn %{digits: digits, target: target} ->
+    #     check_operator
+    #   end)
 
-    [simple | complex_calculated]
-    |> List.flatten()
-    |> Enum.map(fn %{target: target} -> target end)
-    |> Enum.sum()
+    # [simple | complex_calculated]
+    # |> List.flatten()
+    # |> Enum.map(fn %{target: target} -> target end)
+    # |> Enum.sum()
   end
 
   defp combinify_list(list, join_index, list_length, target) do
@@ -60,22 +64,21 @@ defmodule Part2Solver do
   defp can_be_true?(line) do
     %{target: target, digits: digits} = line
 
-    simple_solve =
-      if digits |> Enum.reverse() |> check_operator(target) do
-        :simple
-      else
-        :complex
-      end
-
-    Map.put(line, :solve_pattern, simple_solve)
+    digits |> Enum.reverse() |> check_operator(target)
   end
 
   defp check_operator([final_number], target) do
     final_number == target
   end
 
-  defp check_operator([current_num | rest_digits], target) do
-    check_operator(rest_digits, target - current_num) ||
-      check_operator(rest_digits, target / current_num)
+  defp check_operator([current_num | [next_num | rest_digits]], target) do
+    check_operator([next_num | rest_digits], target - current_num) ||
+      check_operator([next_num | rest_digits], target / current_num) 
+  end
+
+  defp join_numbers(left, right) do
+    [left, right]
+    |> Enum.join()
+    |> String.to_integer()
   end
 end

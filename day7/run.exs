@@ -6,6 +6,7 @@ alias Parser
 
 Code.require_file("./lib/part_1_solver.ex", __DIR__)
 
+# Part 1
 alias Part1Solver
 
 Parser.parse("./inputs/test.txt")
@@ -18,6 +19,7 @@ Parser.parse("./inputs/prod.txt")
 
 Code.require_file("./lib/part_2_solver.ex", __DIR__)
 
+# Part 2
 alias Part2Solver
 
 Parser.parse("./inputs/test.txt")

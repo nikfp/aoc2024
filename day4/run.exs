@@ -39,22 +39,49 @@ alias Aoc2024Elixir.D04
 
 D04.run_part_1("./inputs/prod.txt")
 
-Benchee.run(%{
-   nik_part1: (fn -> 
-    Parser.parse("./inputs/prod.txt")
-    |> Part1Solver.solve()
-    |> IO.inspect(label: "Part 1 prod")
-    end),
-  nik_part2: (fn -> 
-    Parser.parse("./inputs/prod.txt")
-    |> Part2Solver.solve()
-    |> IO.inspect(label: "Part 2 prod")
-  end),
-  waseem_part1: (fn -> 
-    D04.run_part_1("./inputs/prod.txt")
-  end),
-  waseem_part2: (fn -> 
-    D04.run_part_2("./inputs/prod.txt")
-  end)
-}, parallel: 2, time: 2, memory_time: 2, reduction_time: 2)
+Code.require_file("./lib/makaze_solvers.ex", __DIR__)
 
+alias MakazeSolver
+
+MakazeSolver.reader("./inputs/prod.txt")
+|> MakazeSolver.part1()
+|> IO.inspect(label: "Makaze part 1")
+
+MakazeSolver.reader("./inputs/prod.txt")
+|> MakazeSolver.part2()
+|> IO.inspect(label: "Makaze part 2")
+
+Benchee.run(
+  %{
+    nik_part1: fn ->
+      Parser.parse("./inputs/prod.txt")
+      |> Part1Solver.solve()
+      |> IO.inspect(label: "Part 1 prod")
+    end,
+    nik_part2: fn ->
+      Parser.parse("./inputs/prod.txt")
+      |> Part2Solver.solve()
+      |> IO.inspect(label: "Part 2 prod")
+    end,
+    waseem_part1: fn ->
+      D04.run_part_1("./inputs/prod.txt")
+    end,
+    waseem_part2: fn ->
+      D04.run_part_2("./inputs/prod.txt")
+    end,
+    makaze_part1: fn ->
+      MakazeSolver.reader("./inputs/prod.txt")
+      |> MakazeSolver.part1()
+      |> IO.inspect(label: "Makaze part 1")
+    end,
+    makaze_part2: fn ->
+      MakazeSolver.reader("./inputs/prod.txt")
+      |> MakazeSolver.part2()
+      |> IO.inspect(label: "Makaze part 2")
+    end
+  },
+  parallel: 2,
+  time: 2,
+  memory_time: 1,
+  reduction_time: 1
+)

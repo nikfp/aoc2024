@@ -4,10 +4,9 @@ defmodule Parser do
     |> String.trim()
     |> String.split("", trim: true)
     |> Enum.map(&String.to_integer/1)
-    |> build_loc_list()
   end
 
-  defp build_loc_list(input_list) do
+  def build_loc_list(input_list) do
     add_elements(:filled, input_list, 0, [])
   end
 

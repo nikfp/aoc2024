@@ -12,11 +12,12 @@ defmodule Part1Solver do
     # will fill in for the nil, and the forward list advances
     # when the value of the forward list equals what's being popped 
     # from the reverse list, the iteration is complete
+    process_lists(forward, input, [])
   end
 
   defp process_lists([nil | forward_rest], [nil | reverse_rest], collector_list) do
     # in this one, advance the reverse list
-    process_lists([nil, forward_rest], [reverse_rest], collector_list)
+    process_lists([nil | forward_rest], [reverse_rest], collector_list)
   end
 
   defp process_lists([nil | forward_rest], [reverse | reverse_rest], collector_list) do
@@ -31,6 +32,8 @@ defmodule Part1Solver do
 
   defp process_lists([forward | forward_rest], [reverse | reverse_rest], collector_list)
        when forward == reverse do
+    IO.puts("We hit the special middle case! ")
+    collector_list
     # This is the special case, the two input lists have caught up in the middle. 
     # Take whatever values are left of the forward value, add to collector, and return the collector.   
   end

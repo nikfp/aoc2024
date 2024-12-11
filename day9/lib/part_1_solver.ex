@@ -16,14 +16,17 @@ defmodule Part1Solver do
 
   defp process_lists([nil | forward_rest], [nil | reverse_rest], collector_list) do
     # in this one, advance the reverse list
+    process_lists([nil, forward_rest], [reverse_rest], collector_list)
   end
 
   defp process_lists([nil | forward_rest], [reverse | reverse_rest], collector_list) do
     # in this one, add the reverse element to the collector and advance the forward list 
+    process_lists(forward_rest, [reverse_rest], [reverse | collector_list])
   end
 
-  defp process_lists([forward | forward_rest], [nil | reverse_rest], collector_list) do
+  defp process_lists(forward, [nil | reverse_rest], collector_list) do
     # in this one, advance the reverse list 
+    process_lists(forward, reverse_rest, collector_list)
   end
 
   defp process_lists([forward | forward_rest], [reverse | reverse_rest], collector_list)
@@ -32,7 +35,8 @@ defmodule Part1Solver do
     # Take whatever values are left of the forward value, add to collector, and return the collector.   
   end
 
-  defp process_lists([forward | forward_rest], [reverse | reverse_rest], collector_list) do
+  defp process_lists([forward | forward_rest], reverse, collector_list) do
     # in this one, place the forward value in the collector, advance the forward list 
+    process_lists(forward_rest, reverse, [forward | collector_list])
   end
 end

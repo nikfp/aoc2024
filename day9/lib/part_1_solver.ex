@@ -3,7 +3,7 @@ defmodule Part1Solver do
   List arrives in reverse order, 
   elements are either an integer or nil
   """
-  def solve(input) do
+  def solve_with_index(input) do
     forward = Enum.reverse(input)
 
     list_length = length(input)
@@ -21,6 +21,21 @@ defmodule Part1Solver do
     |> Enum.reduce(0, fn {num, index}, acc ->
       num * index + acc
     end)
+  end
+
+  def solve_with_reducer_only(input) do
+    forward = Enum.reverse(input)
+
+    list_length = length(input)
+
+    {number, _} =
+      process_lists(forward, input, [], list_length, 0, 0)
+      |> Enum.reverse()
+      |> Enum.reduce({0, 0}, fn num, {acc, index} ->
+        {num * index + acc, index + 1}
+      end)
+
+    number
   end
 
   # in this one, advance the reverse list

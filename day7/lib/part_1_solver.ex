@@ -35,6 +35,7 @@ defmodule Part1Solver do
 
   defp check_operator([current_num | rest_digits], target) do
     check_operator(rest_digits, target - current_num) ||
-      check_operator(rest_digits, target / current_num)
+      (rem(target, current_num) == 0 &&
+         check_operator(rest_digits, (target / current_num) |> trunc()))
   end
 end

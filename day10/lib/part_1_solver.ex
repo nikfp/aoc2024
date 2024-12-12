@@ -15,7 +15,7 @@ defmodule Part1Solver do
   # continue until the location is 9
   # when you get to the top, return something consistent
 
-  defp look_ahead(grid, 9, pos) do
+  defp look_ahead(grid, 10, pos) do
     [1]
   end
 

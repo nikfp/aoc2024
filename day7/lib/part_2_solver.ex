@@ -22,13 +22,14 @@ defmodule Part2Solver do
   end
 
   defp check_operator([current_num | [next_num | rest_digits]], target) do
-    {match, value} =
-      tease_apart_numbers(target, current_num)
-
     check_operator([next_num | rest_digits], target - current_num) ||
       (rem(target, current_num) == 0 &&
          check_operator([next_num | rest_digits], (target / current_num) |> trunc())) ||
-      (match == :match && check_operator([next_num | rest_digits], value))
+      with {:match, value} <- tease_apart_numbers(target, current_num) do
+        check_operator([next_num | rest_digits], value)
+      else
+        _ -> false
+      end
   end
 
   defp tease_apart_numbers(target, current_num) do

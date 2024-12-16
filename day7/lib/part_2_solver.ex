@@ -39,26 +39,5 @@ defmodule Part2Solver do
       val when val == current_num -> {:match, div(target, divisor)}
       _ -> {:nomatch, 0}
     end
-
-    #   target_str = Integer.to_string(target) |> String.split("", trim: true)
-    #
-    #   current_num_str =
-    #     Integer.to_string(current_num)
-    #     |> String.split("", trim: true)
-    #
-    #   trim_length = length(current_num_str)
-    #
-    #   trim = Enum.take(target_str, 0 - trim_length)
-    #
-    #   if trim == current_num_str do
-    #     return_str = target_str |> Enum.drop(0 - trim_length) |> Enum.join()
-    #
-    #     case return_str do
-    #       "" -> {:nomatch, 0}
-    #       val -> {:match, val |> String.to_integer()}
-    #     end
-    #   else
-    #     {:nomatch, 0}
-    #   end
   end
 end

@@ -1,8 +1,13 @@
 defmodule Part2Solver do
   def solve(input) do
     input
-    |> Enum.filter(fn el -> can_be_true?(el) end)
-    |> Enum.map(& &1.target)
+    |> Enum.map(fn line ->
+      if can_be_true?(line) do
+        line.target
+      else
+        0
+      end
+    end)
     |> Enum.sum()
   end
 
@@ -27,7 +32,7 @@ defmodule Part2Solver do
   end
 
   defp tease_apart_numbers(target, current_num) do
-    target_str = Integer.to_string(target |> trunc()) |> String.split("", trim: true)
+    target_str = Integer.to_string(target) |> String.split("", trim: true)
 
     current_num_str =
       Integer.to_string(current_num)

@@ -39,10 +39,6 @@ defmodule MakazeSolver do
   end
 
   defp eval(:invalid, _rest, result, _ops_list), do: {false, result}
-  defp eval(:invalid, _rest, result, [],  _ops_list), do: {false, result}
-  defp eval(:invalid, rest, result, rest_ops, ops_list) do
-    {false, result}
-  end
   defp eval(_acc, [], result, _ops_list), do: {false, result}
 
   defp eval(nil, [first | rest], result, ops_list) do
@@ -53,8 +49,14 @@ defmodule MakazeSolver do
     do_op(acc, terms, result, ops_list, ops_list)
   end
 
+  # defp eval(:invalid, _rest, result, _rest_ops, _ops_list) do
+  #   {false, result}
+  # end
+
+  # defp eval(:invalid, _rest, result, [],  _ops_list), do: {false, result}
+
   defp do_op(_acc, _terms, result, [], _ops_list), do: {false, result}
-  defp do_op(acc, terms, result, [], ops_list), do: {false, result}
+  # defp do_op(acc, terms, result, [], ops_list), do: {false, result}
 
   defp do_op(acc, [first | rest] = terms, result, [op | rest_ops], ops_list) do
     output = op.(acc, first)
@@ -101,4 +103,3 @@ end
 # IO.inspect(part2_test, label: "Part 2 Test")
 # part2 = file |> Solver.parse() |> Solver.sum([&Solver.unconcat/2, &Solver.divide/2, &-/2])
 # IO.inspect(part2, label: "Part 2 Real")
-

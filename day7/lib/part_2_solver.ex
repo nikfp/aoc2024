@@ -1,14 +1,13 @@
 defmodule Part2Solver do
   def solve(input) do
     input
-    |> Enum.map(fn line ->
+    |> Enum.reduce(0, fn line, acc ->
       if can_be_true?(line) do
-        line.target
+        line.target + acc
       else
-        0
+        acc
       end
     end)
-    |> Enum.sum()
   end
 
   defp can_be_true?(line) do
@@ -33,25 +32,33 @@ defmodule Part2Solver do
   end
 
   defp tease_apart_numbers(target, current_num) do
-    target_str = Integer.to_string(target) |> String.split("", trim: true)
+    size_b = :math.log10(current_num) |> floor() |> Kernel.+(1) |> trunc()
+    divisor = :math.pow(10, size_b) |> trunc()
 
-    current_num_str =
-      Integer.to_string(current_num)
-      |> String.split("", trim: true)
-
-    trim_length = length(current_num_str)
-
-    trim = Enum.take(target_str, 0 - trim_length)
-
-    if trim == current_num_str do
-      return_str = target_str |> Enum.drop(0 - trim_length) |> Enum.join()
-
-      case return_str do
-        "" -> {:nomatch, 0}
-        val -> {:match, val |> String.to_integer()}
-      end
-    else
-      {:nomatch, 0}
+    case rem(target, divisor) do
+      val when val == current_num -> {:match, div(target, divisor)}
+      _ -> {:nomatch, 0}
     end
+
+    #   target_str = Integer.to_string(target) |> String.split("", trim: true)
+    #
+    #   current_num_str =
+    #     Integer.to_string(current_num)
+    #     |> String.split("", trim: true)
+    #
+    #   trim_length = length(current_num_str)
+    #
+    #   trim = Enum.take(target_str, 0 - trim_length)
+    #
+    #   if trim == current_num_str do
+    #     return_str = target_str |> Enum.drop(0 - trim_length) |> Enum.join()
+    #
+    #     case return_str do
+    #       "" -> {:nomatch, 0}
+    #       val -> {:match, val |> String.to_integer()}
+    #     end
+    #   else
+    #     {:nomatch, 0}
+    #   end
   end
 end

@@ -9,14 +9,13 @@ defmodule Part1Solver do
   """
   def solve(input) do
     input
-    |> Enum.map(fn line ->
+    |> Enum.reduce(0, fn line, acc ->
       if can_be_true?(line) do
-        line.target
+        line.target + acc
       else
-        0
+        acc
       end
     end)
-    |> Enum.sum()
   end
 
   defp can_be_true?(line) do

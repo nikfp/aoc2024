@@ -49,7 +49,7 @@ Benchee.run(
     nik_1: fn ->
       Parser.parse("./inputs/prod.txt")
       |> Part1Solver.solve()
-      |> IO.inspect(label: "prod part 1", charlists: :as_integers)
+      |> IO.inspect(label: "prod part 1")
     end,
     makaze_1: fn ->
       File.read!("./inputs/prod.txt")
@@ -60,7 +60,7 @@ Benchee.run(
     nik_2: fn ->
       Parser.parse("./inputs/prod.txt")
       |> Part2Solver.solve()
-      |> IO.inspect(label: "prod part 2", charlists: :as_integers)
+      |> IO.inspect(label: "prod part 2")
     end,
     makaze_2: fn ->
       File.read!("./inputs/prod.txt")
@@ -69,7 +69,7 @@ Benchee.run(
       |> IO.inspect(label: "Part 2 Real")
     end
   },
-  time: 2,
+  time: 1,
   memory_time: 1,
   reduction_time: 1
 )

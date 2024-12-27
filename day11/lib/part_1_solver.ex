@@ -1,6 +1,13 @@
 defmodule Part1Solver do
-  def solve(input, counter) do
+  def solve(input, count_value) do
+    Counter.start_link(0)
+
     input
+    |> Enum.each(fn el ->
+      check_number(el, count_value)
+    end)
+
+    Counter.value()
   end
 
   defp check_number(_, 0) do
@@ -12,10 +19,18 @@ defmodule Part1Solver do
   end
 
   defp check_number(number, counter) do
-    log_10 = :math.log10(number) |> floor()
+    log_10 = :math.log10(number) |> floor() |> Kernel.+(1)
 
     if rem(log_10, 2) == 0 do
-      # need logic to split number in two and recurse down each new number 
+      midpoint = log_10 / 2
+
+      divisor = trunc(:math.pow(10, midpoint))
+
+      div(number, divisor)
+      |> check_number(counter - 1)
+
+      rem(number, divisor)
+      |> check_number(counter - 1)
     else
       check_number(number * 2024, counter - 1)
     end

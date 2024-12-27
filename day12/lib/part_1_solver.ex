@@ -1,6 +1,11 @@
 defmodule Part1Solver do
   def solve(input) do
-    input
+    %{locations: locations, upper_bound: upper_bound} = input
+
+    Map.keys(locations)
+    |> Enum.reduce({locations, upper_bound, 0}, fn location, acc ->
+      nil
+    end)
   end
 
   # work through all locations
@@ -8,6 +13,12 @@ defmodule Part1Solver do
   # assign the next group number to it
   # flood fill search all connected elements of the same type
   # in that group. 
+  defp process_location(location, grid, next_group) do
+    # if location has a group, it's been processed. 
+    # Return the grid
+
+    # if the location doesn't have a group, 
+  end
 
   # once groups are numbered, areas are the number of elements
   # in the group. 

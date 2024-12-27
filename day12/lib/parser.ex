@@ -6,7 +6,7 @@ defmodule Parser do
 
     upper_bound = length(lines)
 
-    lines =
+    locations =
       lines
       |> Enum.with_index()
       |> Enum.reduce(%{}, fn {line, row}, acc ->
@@ -20,6 +20,6 @@ defmodule Parser do
         end)
       end)
 
-    %{lines: lines, upper_bound: upper_bound}
+    %{locations: locations, upper_bound: upper_bound}
   end
 end

@@ -15,3 +15,7 @@ Parser.parse("./inputs/test.txt")
 Parser.parse("./inputs/prod.txt")
 |> Part1Solver.solve(25)
 |> IO.inspect(label: "prod part 1")
+
+Parser.parse("./inputs/prod.txt")
+|> Part1Solver.solve(75)
+|> IO.inspect(label: "prod part 1")

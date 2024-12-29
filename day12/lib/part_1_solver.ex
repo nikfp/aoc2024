@@ -4,6 +4,9 @@ defmodule Part1Solver do
 
     {updated_grid, _} =
       Map.keys(grid)
+      # |> Enum.drop(8)
+      # |> Enum.take(1)
+      # |> IO.inspect(label: "keys")
       |> Enum.reduce({grid, 0}, fn location, acc ->
         {grid, next_group} = acc
 
@@ -19,15 +22,15 @@ defmodule Part1Solver do
     updated_grid
     |> Enum.map(fn {_, v} -> v end)
     |> Enum.group_by(fn %{group: group} -> group end)
-    |> IO.inspect(label: "updated locations")
-    |> Enum.map(fn {k, v} ->
+    # |> IO.inspect(label: "updated locations")
+    |> Enum.map(fn {_, v} ->
       bound_count =
         Enum.map(v, fn loc -> length(loc.boundaries) end)
         |> Enum.sum()
 
       length(v) * bound_count
     end)
-    |>IO.inspect(label: "region totals")
+    # |> IO.inspect(label: "region totals")
     |> Enum.sum()
   end
 
@@ -45,8 +48,8 @@ defmodule Part1Solver do
     [{row, col} | rest_locs] = lookup_locs
     location_details = Map.get(grid, {row, col}) |> Map.put(:group, group_number)
 
+    # set surrounding locations
     {updated_location, updated_lookups} =
-      # set surrounding locations
       [
         {row + 1, col},
         {row - 1, col},
@@ -63,7 +66,7 @@ defmodule Part1Solver do
             if Map.has_key?(evaluated_locs, new_loc) do
               {details, [lookups]}
             else
-              {details, [new_loc | lookups]}
+              {details, [new_loc | rest_locs]}
             end
 
           _ ->

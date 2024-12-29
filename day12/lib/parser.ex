@@ -6,7 +6,7 @@ defmodule Parser do
 
     upper_bound = length(lines)
 
-    locations =
+    grid =
       lines
       |> Enum.with_index()
       |> Enum.reduce(%{}, fn {line, row}, acc ->
@@ -15,11 +15,12 @@ defmodule Parser do
         |> Enum.reduce(acc, fn {char, col}, inner_acc ->
           Map.put(inner_acc, {row, col}, %{
             char: char,
-            group: nil
+            group: nil,
+            boundaries: []
           })
         end)
       end)
 
-    %{locations: locations, upper_bound: upper_bound}
+    %{grid: grid, upper_bound: upper_bound}
   end
 end

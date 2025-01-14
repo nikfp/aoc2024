@@ -2,36 +2,24 @@ defmodule Part1Solver do
   def solve(input) do
     %{grid: grid, upper_bound: _upper_bound} = input
 
-    {updated_grid, _} =
-      Map.keys(grid)
-      # |> Enum.drop(8)
-      # |> Enum.take(1)
-      # |> IO.inspect(label: "keys")
-      |> Enum.reduce({grid, 0}, fn location, acc ->
-        {grid, next_group} = acc
+    # {updated_grid, _} =
 
-        location_info = Map.get(grid, location)
+    # Take the grid keys
+    Map.keys(grid)
+    # Work through each one in a reducer
+    |> Enum.reduce({grid, 0}, fn element, {new_grid, group_number} ->
+      # Pull the location out of the grid
+      location = new_grid |> Map.get(element)
 
-        if location_info.group do
-          {grid, next_group}
-        else
-          flood_search(grid, %{}, [location], next_group)
-        end
-      end)
+      # If the location already has a group, continue
+      if location.group != nil do
+        {new_grid, group_number}
 
-    updated_grid
-    |> Enum.map(fn {_, v} -> v end)
-    |> Enum.group_by(fn %{group: group} -> group end)
-    # |> IO.inspect(label: "updated locations")
-    |> Enum.map(fn {_, v} ->
-      bound_count =
-        Enum.map(v, fn loc -> length(loc.boundaries) end)
-        |> Enum.sum()
-
-      length(v) * bound_count
+        # Otherwise execute a flood search on the current location
+      else
+        flood_search(new_grid, %{}, [element], group_number)
+      end
     end)
-    # |> IO.inspect(label: "region totals")
-    |> Enum.sum()
   end
 
   # work through all locations
@@ -45,41 +33,34 @@ defmodule Part1Solver do
   end
 
   defp flood_search(grid, evaluated_locs, lookup_locs, group_number) do
+    # Get the first element of the lookup list
     [{row, col} | rest_locs] = lookup_locs
-    location_details = Map.get(grid, {row, col}) |> Map.put(:group, group_number)
 
-    # set surrounding locations
-    {updated_location, updated_lookups} =
-      [
-        {row + 1, col},
-        {row - 1, col},
-        {row, col + 1},
-        {row, col - 1}
-      ]
-      # check if locations have been evaluated
-      |> Enum.filter(fn el -> Map.get(evaluated_locs, el, false) == false end)
-      |> Enum.reduce({location_details, rest_locs}, fn new_loc, {details, lookups} ->
-        eval_loc = Map.get(grid, new_loc, %{char: "AA", group: nil})
+    # Get the character we're evaluating against
+    %{char: location_char} = location_info = Map.get(grid, {row, col})
 
-        case eval_loc.char do
-          char when char == details.char ->
-            if Map.has_key?(evaluated_locs, new_loc) do
-              {details, [lookups]}
-            else
-              {details, [new_loc | rest_locs]}
-            end
+    # Get surrounding locations as a list 
+    [
+      {row, col - 1}, 
+      {row, col + 1},
+      {row - 1, col}, 
+      {row + 1, col}
+    ]
+    # Iterate over locations
+    |> Enum.reduce({grid}, fn new_loc, {reducing_grid} -> 
+      # If the new location has been evaluated, ignore it and 
+      # move along to the next location
+      if Map.has_key?(evaluated_locs, new_loc) do
+        {reducing_grid}
 
-          _ ->
-            {Map.update(details, :boundaries, [], fn list -> [new_loc | list] end), lookups}
-        end
-      end)
+      else
+        #If the now location has not been evaluated, we need it's character
+        %{char: new_loc_char} = Map.get(reducing_grid)
+      end
+    end)
+    # 
 
-    flood_search(
-      grid |> Map.put({row, col}, updated_location),
-      evaluated_locs |> Map.put({row, col}, true),
-      updated_lookups,
-      group_number
-    )
+    flood_search(grid, evaluated_locs, [], group_number)
   end
 
   # once groups are numbered, areas are the number of elements

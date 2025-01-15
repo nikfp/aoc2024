@@ -5,8 +5,9 @@ defmodule Part1Solver do
     # Take the grid keys
     {updated_grid, _} =
       Map.keys(grid)
-      # |> Enum.drop(1)
-      # |> Enum.take(1)
+      |> Enum.drop(5)
+      |> Enum.take(1)
+      |> IO.inspect()
       # Work through each one in a reducer
       |> Enum.reduce({grid, 0}, fn element, {new_grid, group_number} ->
         # Pull the location out of the grid
@@ -23,6 +24,7 @@ defmodule Part1Solver do
       end)
 
     updated_grid
+    |> IO.inspect()
     |> Enum.map(fn {_, v} -> v end)
     |> Enum.group_by(fn el -> el.group end)
     |> Enum.map(fn {_, v} -> 
@@ -58,11 +60,12 @@ defmodule Part1Solver do
     # Get surrounding locations as a list 
     {updated_lookup_locs, updated_location_details} =
       [
-        {row, col - 1},
+        {row, col - 1}, 
         {row, col + 1},
         {row - 1, col},
         {row + 1, col}
       ]
+
       # Iterate over locations
       |> Enum.reduce({rest_locs, location_info}, fn new_loc, {other_locs, details} ->
         # If the new location has been evaluated, ignore it and 

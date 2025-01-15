@@ -20,25 +20,59 @@ defmodule Part2Solver do
         end
       end)
 
-    updated_grid
-    |> Enum.map(fn {_, v} -> v end)
-    |> Enum.group_by(fn el -> el.group end)
-    |> IO.inspect()
-    |> Enum.map(fn {k, v} ->
-      area = length(v)
+    groups =
+      updated_grid
+      |> Enum.map(fn {_, v} -> v end)
+      |> Enum.group_by(fn el -> el.group end)
+      |> IO.inspect()
+      |> Enum.map(fn {k, v} ->
+        area = length(v)
 
-      bounds = Enum.reduce(v, %{}, fn el, acc ->
-        Map.merge(el.boundaries, acc)
+        bounds =
+          Enum.reduce(v, %{}, fn el, acc ->
+            Map.merge(el.boundaries, acc)
+          end)
+
+        %{
+          group: k,
+          area: area,
+          bounds: bounds
+        }
       end)
-
-      %{
-        group: k,
-        area: area,
-        bounds: bounds
-      }
-    end)
+      |> Enum.take(1)
 
     # |> Enum.sum()
+  end
+
+  # This is the base case. No edges are left, so the edge count
+  # can be returned
+  defp traverse_edges(
+         _group_number,
+         _master_grid,
+         edge_map,
+         edge_count
+       )
+       when map_size(edge_map) == 0 do
+    %{edge_count: edge_count}
+  end
+
+  defp traverse_edges(group_number, master_grid, edge_map, edge_count) do
+    # The idea here is that you first have to select any edge at random,
+    # then you have to identify the first location adjacent to the edge
+    # that is in the group. That becomes your starting point. 
+    # TODO - create a function to make this easier
+    # The relationship between the edge and the starting point dictates which
+    # direction to start moving. 
+
+    # The traversal of one loop of edges is complete when the starting position 
+    # is reached and the traversal is going in the same direction
+
+    # An edge is counted when a turn is made in the traversal
+
+    # A map needs to be kept of visited edges, At the end of a traversal loop, 
+    # the difference between the supplied edge map and the visited edges 
+    # will be the new map supplied to the recursion. This will catch 
+    # situations where edges are seen for multiple sections
   end
 
   # work through all locations

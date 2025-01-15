@@ -2,24 +2,40 @@ defmodule Part1Solver do
   def solve(input) do
     %{grid: grid, upper_bound: _upper_bound} = input
 
-    # {updated_grid, _} =
-
     # Take the grid keys
-    Map.keys(grid)
-    # Work through each one in a reducer
-    |> Enum.reduce({grid, 0}, fn element, {new_grid, group_number} ->
-      # Pull the location out of the grid
-      location = new_grid |> Map.get(element)
+    {updated_grid, _} =
+      Map.keys(grid)
+      # |> Enum.drop(1)
+      # |> Enum.take(1)
+      # Work through each one in a reducer
+      |> Enum.reduce({grid, 0}, fn element, {new_grid, group_number} ->
+        # Pull the location out of the grid
+        location = new_grid |> Map.get(element)
 
-      # If the location already has a group, continue
-      if location.group != nil do
-        {new_grid, group_number}
+        # If the location already has a group, continue
+        if location.group != nil do
+          {new_grid, group_number}
 
-        # Otherwise execute a flood search on the current location
-      else
-        flood_search(new_grid, %{}, [element], group_number)
-      end
+          # Otherwise execute a flood search on the current location
+        else
+          flood_search(new_grid, %{}, [element], group_number)
+        end
+      end)
+
+    updated_grid
+    |> Enum.map(fn {_, v} -> v end)
+    |> Enum.group_by(fn el -> el.group end)
+    |> Enum.map(fn {_, v} -> 
+      area = length(v)
+    
+      perimeter = 
+        Enum.flat_map(v, fn %{boundaries: bounds} -> bounds end)
+        |> Enum.uniq()
+        |> Enum.count()
+    
+      area * perimeter
     end)
+    |> Enum.sum()
   end
 
   # work through all locations
@@ -40,27 +56,51 @@ defmodule Part1Solver do
     %{char: location_char} = location_info = Map.get(grid, {row, col})
 
     # Get surrounding locations as a list 
-    [
-      {row, col - 1}, 
-      {row, col + 1},
-      {row - 1, col}, 
-      {row + 1, col}
-    ]
-    # Iterate over locations
-    |> Enum.reduce({grid}, fn new_loc, {reducing_grid} -> 
-      # If the new location has been evaluated, ignore it and 
-      # move along to the next location
-      if Map.has_key?(evaluated_locs, new_loc) do
-        {reducing_grid}
+    {updated_lookup_locs, updated_location_details} =
+      [
+        {row, col - 1},
+        {row, col + 1},
+        {row - 1, col},
+        {row + 1, col}
+      ]
+      # Iterate over locations
+      |> Enum.reduce({rest_locs, location_info}, fn new_loc, {other_locs, details} ->
+        # If the new location has been evaluated, ignore it and 
+        # move along to the next location
+        if Map.has_key?(evaluated_locs, new_loc) do
+          {other_locs, details}
+        else
+          # If the now location has not been evaluated, we need it's character
+          %{char: new_loc_char} = new_loc_details = Map.get(grid, new_loc, %{char: "AA"})
 
-      else
-        #If the now location has not been evaluated, we need it's character
-        %{char: new_loc_char} = Map.get(reducing_grid)
-      end
-    end)
-    # 
+          # If the character matches, add the new location to the list of
+          # Things to evaluate
+          if new_loc_char == location_char do
+            {[new_loc | other_locs], details}
+          else
+            # if the character doesn't match, 
+            # add the new location to the list of locations that are boundaries
+            updated_details =
+              Map.update(details, :boundaries, [], fn list -> [new_loc | list] end)
 
-    flood_search(grid, evaluated_locs, [], group_number)
+            {other_locs, updated_details}
+          end
+        end
+      end)
+
+    location_with_group =
+      updated_location_details
+      |> Map.put(:group, group_number)
+
+    updated_grid =
+      grid
+      |> Map.put({row, col}, location_with_group)
+
+    updated_eval_locations =
+      evaluated_locs
+      |> Map.put({row, col}, true)
+
+    flood_search(updated_grid, updated_eval_locations, updated_lookup_locs, group_number)
   end
 
   # once groups are numbered, areas are the number of elements
